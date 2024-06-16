@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpawnObject : MonoBehaviour
 {
     public GameObject[] objects;
-    public Sprite replacementSprite; // New field for the replacement sprite as a Sprite
+    public Sprite replacementSprite; 
     public float ChanceToRespawnGood = 0.9f;
     public float descentSpeed = 5f;
     public float minSpawnDelay = 1f;
@@ -20,7 +20,6 @@ public class SpawnObject : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(minSpawnDelay, maxSpawnDelay));
-
             InstantiateRandomObject();
         }
     }
@@ -39,20 +38,17 @@ public class SpawnObject : MonoBehaviour
         }
 
         GameObject obj = Instantiate(objects[objectIndex], transform.position, objects[objectIndex].transform.rotation);
-        obj.AddComponent<BoxCollider2D>(); // Add a collider for detecting clicks
-
-        // Get the ClickableObject component and pass the replacement sprite as a Sprite
+        obj.AddComponent<BoxCollider2D>(); 
         ClickableObject clickable = obj.AddComponent<ClickableObject>();
         clickable.replacementSprite = replacementSprite;
-
-        // Set the score value: positive for good objects, negative for bad objects
+        
         if (objectIndex == objects.Length - 1)
         {
-            clickable.scoreValue = -1; // Negative score for bad objects
+            clickable.scoreValue = -1; 
         }
         else
         {
-            clickable.scoreValue = 1; // Positive score for good objects
+            clickable.scoreValue = 1; 
         }
 
         StartCoroutine(SmoothDescent(obj));
@@ -64,11 +60,12 @@ public class SpawnObject : MonoBehaviour
         Vector3 end = new Vector3(start.x, start.y - 13, start.z);
 
         float elapsedTime = 0;
+        ClickableObject clickable = obj.GetComponent<ClickableObject>();
         while (elapsedTime < descentSpeed)
         {
-            if (obj == null) // Проверяем, существует ли объект
+            if (obj == null || (clickable != null && clickable.hasBeenClicked)) 
             {
-                yield break; // Прерываем корутину, если объект был уничтожен
+                yield break; 
             }
 
             obj.transform.position = Vector3.Lerp(start, end, (elapsedTime / descentSpeed));
@@ -76,7 +73,7 @@ public class SpawnObject : MonoBehaviour
             yield return null;
         }
 
-        if (obj != null) // Еще раз проверяем перед уничтожением
+        if (obj != null) 
         {
             obj.transform.position = end;
             Destroy(obj);

@@ -125,5 +125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replacementSprite: {fileID: 21300000, guid: adf16cf69e9c3464d8184cd38f65df98, type: 3}
-  destroyDelay: 1
-  scoreValue: -29
+  destroyDelay: 0.5
+  scoreValue: -8
+  hasBeenClicked: 0
