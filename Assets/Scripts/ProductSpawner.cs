@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class SpawnObject : MonoBehaviour
+public class ProductSpawner : MonoBehaviour
 {
     public GameObject[] objects;
-    public Sprite replacementSprite; 
     public float ChanceToRespawnGood = 0.9f;
     public float descentSpeed = 5f;
     public float minSpawnDelay = 1f;
@@ -39,18 +38,7 @@ public class SpawnObject : MonoBehaviour
 
         GameObject obj = Instantiate(objects[objectIndex], transform.position, objects[objectIndex].transform.rotation);
         obj.AddComponent<BoxCollider2D>(); 
-        ClickableObject clickable = obj.AddComponent<ClickableObject>();
-        clickable.replacementSprite = replacementSprite;
-        
-        if (objectIndex == objects.Length - 1)
-        {
-            clickable.scoreValue = -1; 
-        }
-        else
-        {
-            clickable.scoreValue = 1; 
-        }
-
+        ProductClicked clickable = obj.AddComponent<ProductClicked>();
         StartCoroutine(SmoothDescent(obj));
     }
 
@@ -60,7 +48,7 @@ public class SpawnObject : MonoBehaviour
         Vector3 end = new Vector3(start.x, start.y - 13, start.z);
 
         float elapsedTime = 0;
-        ClickableObject clickable = obj.GetComponent<ClickableObject>();
+        ProductClicked clickable = obj.GetComponent<ProductClicked>();
         while (elapsedTime < descentSpeed)
         {
             if (obj == null || (clickable != null && clickable.hasBeenClicked)) 

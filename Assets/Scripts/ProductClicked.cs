@@ -1,22 +1,23 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class ClickableObject : MonoBehaviour
+
+public enum Producttype { Good, Bad }
+
+
+public class ProductClicked : MonoBehaviour
 {
+    [SerializeField] private Producttype productType;
     public Sprite replacementSprite;
-    public float destroyDelay = 2f; 
-    public int scoreValue = 1; 
-    public bool hasBeenClicked = false; 
+    private float destroyDelay = 0.5f; 
+    public bool hasBeenClicked = false;
 
     private ScoreManager scoreManager;
 
     private void Start()
     {
         scoreManager = FindObjectOfType<ScoreManager>();
-        if (scoreManager == null)
-        {
-            Debug.LogError("ScoreManager not found in the scene.");
-        }
     }
 
     private void Update()
@@ -54,22 +55,19 @@ public class ClickableObject : MonoBehaviour
         }
 
         hasBeenClicked = true;
-        
+
         if (scoreManager != null)
         {
-            if (scoreValue > 0)
+            if (productType == Producttype.Good)
             {
-                scoreManager.AddScore(scoreValue);
-                Debug.Log("Added " + scoreValue + " points. Total score: " + scoreManager.GetScore());
+                scoreManager.AddScore(1.5f);
             }
-            else
+            else if (productType == Producttype.Bad)
             {
-                scoreManager.SubtractScore(-scoreValue);
-                Debug.Log("Subtracted " + (-scoreValue) + " points. Total score: " + scoreManager.GetScore());
+                scoreManager.SubtractScore(10.5f);
             }
         }
 
-        
         StartCoroutine(DestroyAfterDelay());
     }
 

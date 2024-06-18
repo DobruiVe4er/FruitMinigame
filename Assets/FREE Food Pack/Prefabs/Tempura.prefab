@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4000010238849466}
   - component: {fileID: 8569764477629221786}
   - component: {fileID: -6951193646415707874}
-  - component: {fileID: -3793860913376563691}
   m_Layer: 0
   m_Name: Tempura
   m_TagString: Untagged
@@ -112,19 +111,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.7944856, y: 2.0300694}
   m_EdgeRadius: 0
---- !u!114 &-3793860913376563691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000012244298164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c5af04d039d2e340ba1ad344d52692d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  replacementSprite: {fileID: 21300000, guid: adf16cf69e9c3464d8184cd38f65df98, type: 3}
-  destroyDelay: 0.5
-  scoreValue: -8
-  hasBeenClicked: 0
