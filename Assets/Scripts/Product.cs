@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public enum Producttype { Good, Bad }
 
 
-public class ProductClicked : MonoBehaviour
+public class Product : MonoBehaviour
 {
     [SerializeField] private Producttype productType;
     public Sprite replacementSprite;

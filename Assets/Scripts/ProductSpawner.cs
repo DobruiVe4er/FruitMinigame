@@ -1,70 +1,55 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class ProductSpawner : MonoBehaviour
 {
-    public GameObject[] objects;
+    public GameObject[] objects; 
+    private float randomX;
+    Vector2 whereToSpawn;
+    public float spawnDelay;
+    private float nextSpawn = 0.0f;
+    private int currentIndex = 0;
+    private List<GameObject> productsOnScene = new List<GameObject>(); 
     public float ChanceToRespawnGood = 0.9f;
-    public float descentSpeed = 5f;
-    public float minSpawnDelay = 1f;
-    public float maxSpawnDelay = 3f;
 
-    private void Start()
+    void Update()
     {
-        StartCoroutine(SpawnRandomObject());
-    }
-
-    private IEnumerator SpawnRandomObject()
-    {
-        while (true)
+        if (Time.time > nextSpawn)
         {
-            yield return new WaitForSeconds(Random.Range(minSpawnDelay, maxSpawnDelay));
-            InstantiateRandomObject();
-        }
-    }
-
-    private void InstantiateRandomObject()
-    {
-        int objectIndex;
-        float chance = Random.Range(0f, 1f);
-        if (chance < ChanceToRespawnGood)
-        {
-            objectIndex = Random.Range(0, objects.Length - 1);
-        }
-        else
-        {
-            objectIndex = objects.Length - 1;
-        }
-
-        GameObject obj = Instantiate(objects[objectIndex], transform.position, objects[objectIndex].transform.rotation);
-        obj.AddComponent<BoxCollider2D>(); 
-        ProductClicked clickable = obj.AddComponent<ProductClicked>();
-        StartCoroutine(SmoothDescent(obj));
-    }
-
-    private IEnumerator SmoothDescent(GameObject obj)
-    {
-        Vector3 start = obj.transform.position;
-        Vector3 end = new Vector3(start.x, start.y - 13, start.z);
-
-        float elapsedTime = 0;
-        ProductClicked clickable = obj.GetComponent<ProductClicked>();
-        while (elapsedTime < descentSpeed)
-        {
-            if (obj == null || (clickable != null && clickable.hasBeenClicked)) 
+            if (Time.time > nextSpawn && currentIndex < objects.Length)
             {
-                yield break; 
+                float chance = Random.Range(0f, 1f);
+                nextSpawn = Time.time + spawnDelay;
+                randomX = Random.Range(transform.position.x - 2f,transform.position.x + 2f);
+                whereToSpawn = new Vector2(randomX, transform.position.y);
+                if (chance > ChanceToRespawnGood)
+                {
+                    currentIndex = Random.Range(0, objects.Length - 10);
+                }
+                else
+                {
+                    currentIndex = Random.Range(5, objects.Length - 0);
+                }
+                GameObject product = Instantiate(objects[currentIndex], whereToSpawn, Quaternion.identity);
+                productsOnScene.Add(product);
+                StartCoroutine(RemoveFromList(product, 4f));
+                currentIndex++;
             }
-
-            obj.transform.position = Vector3.Lerp(start, end, (elapsedTime / descentSpeed));
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            else if (currentIndex == 15)
+            {
+                currentIndex = 0;
+            }
         }
+    }
 
-        if (obj != null) 
-        {
-            obj.transform.position = end;
-            Destroy(obj);
-        }
+    private IEnumerator RemoveFromList(GameObject product, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(product);
+        productsOnScene.Remove(product); 
     }
 }
