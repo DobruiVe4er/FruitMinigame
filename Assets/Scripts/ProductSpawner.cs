@@ -45,7 +45,9 @@ public class ProductSpawner : MonoBehaviour
             }
         }
     }
-
+    
+    
+    
     private IEnumerator RemoveFromList(GameObject product, float delay)
     {
         yield return new WaitForSeconds(delay);

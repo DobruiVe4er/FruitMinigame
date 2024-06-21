@@ -2,24 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
-public enum Producttype { Good, Bad }
-
-
 public class Product : MonoBehaviour
 {
-    [SerializeField] private Producttype productType;
+    float destroyDelay = 0.5f; 
+    private bool hasBeenClicked = false;
     public Sprite replacementSprite;
-    private float destroyDelay = 0.5f; 
-    public bool hasBeenClicked = false;
-
-    private ScoreManager scoreManager;
-
-    private void Start()
-    {
-        scoreManager = FindObjectOfType<ScoreManager>();
-    }
-
+    
+    
     private void Update()
     {
         
@@ -35,9 +24,7 @@ public class Product : MonoBehaviour
             {
                 inputPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
             }
-
             Collider2D collider = Physics2D.OverlapPoint(inputPosition);
-
             if (collider != null && collider.gameObject == gameObject)
             {
                 OnClick();
@@ -45,9 +32,8 @@ public class Product : MonoBehaviour
         }
     }
 
-    private void OnClick()
+    public void OnClick()
     {
-        
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         if (renderer != null && replacementSprite != null)
         {
@@ -55,22 +41,10 @@ public class Product : MonoBehaviour
         }
 
         hasBeenClicked = true;
-
-        if (scoreManager != null)
-        {
-            if (productType == Producttype.Good)
-            {
-                scoreManager.AddScore(1.5f);
-            }
-            else if (productType == Producttype.Bad)
-            {
-                scoreManager.SubtractScore(10.5f);
-            }
-        }
-
+            
         StartCoroutine(DestroyAfterDelay());
     }
-
+    
     private IEnumerator DestroyAfterDelay()
     {
         yield return new WaitForSeconds(destroyDelay);
